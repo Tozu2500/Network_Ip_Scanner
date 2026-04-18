@@ -1,0 +1,16 @@
+# Build files
+/build/
+/*.o
+/*.exe
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
