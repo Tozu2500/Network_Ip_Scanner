@@ -31,7 +31,21 @@ inline std::string trim(const std::string& s) {
     return s.substr(start, end - start + 1);
 }
 
+inline std::vector<std::string> split(const std::string& s, char delimiter) {
+    std::vector<std::string> tokens;
+    std::istringstream stream(s);
+    std::string token;
+    while (std::getline(stream, token, delimiter)) {
+        tokens.push_back(token);
+    }
+    return tokens;
+}
 
+inline std::string replace_char(const std::string& s, char from, char to) {
+    std::string result = s;
+    std::replace(result.begin(), result.end(), from, to);
+    return result;
+}
 
 }  // Namespace utils
 }  // Namespace netscanner
