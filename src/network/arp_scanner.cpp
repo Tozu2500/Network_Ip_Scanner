@@ -17,5 +17,17 @@
 
 namespace netscanner {
 
+std::string format_mac(const unsigned char* mac, size_t len) {
+    std::ostringstream ss;
+
+    for (size_t i = 0; i < len; ++i) {
+        if (i > 0) ss << ":";
+
+        ss << std::uppercase << std::hex << std::setfill("0") << std::setw(2)
+            << static_cast<int>(mac[i]);
+    }
+
+    return ss.str();
+}
 
 }  // namespace netscanner
