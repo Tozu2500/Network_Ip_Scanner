@@ -30,4 +30,20 @@ std::string format_mac(const unsigned char* mac, size_t len) {
     return ss.str();
 }
 
+std::vector<Device> read_arp_table() {
+    std::vector<Device> devices;
+
+    ULONG table_size = 0;
+    // First call to determine required buffer size
+    GetIpNetTable(nullptr, &table_size, FALSE);
+    if (table_size == 0) return devices;
+
+    std::vector<unsigned char> buffer(table_size);
+    PMIB_IPNETTABLE arp_table = reinterpret_cast<PMIB_IPNETTABLE>(buffer.data());
+
+    if (GetIpNetTable(arp_table, &table_size, TRUE) != NO_ERROR) {
+        return devices;
+    }
+}
+
 }  // namespace netscanner
