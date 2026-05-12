@@ -76,4 +76,36 @@ std::vector<Device> read_arp_table() {
     return devices;
 }
 
+std::string send_arp_request(const std::string& ip) {
+    struct in_addr dest_addr;
+    if (inet_pton(AF_INET, ip.c_str(), &dest_addr) != 1) {
+        return "";
+    }
+
+    ULONG mac_addr[2] = {0};
+    ULONG mac_len = 6;
+
+    DWORD ret = SendARP(dest_addr.s_addr, 0, mac_addr, &mac_len);
+    if (ret == NO_ERROR && mac_len > 0) {
+        unsigned char* mac_bytes = reinterpret_cast<unsigned char*>(mac_addr);
+        return format_mac(mac_bytes, mac_len);
+    }
+
+    return "";
+}
+
+std::string resolve_hostname(const std::string& ip) {
+    struct sockaddr_in sa;
+    memset(&sa, 0, sizeof(sa));
+    sa.sin_family = AF_INET;
+    inet_pton(AF_INET, ip.c_str(), &sa.sin_addr);
+
+    char host[NI_MAXHOST];
+    if (getnameinfo(reinterpret_cast<struct sockaddr*>(&sa), sizeof(sa),
+                host, sizeof(host), nullptr, 0, NI_NAMEREQD) == 0) {
+        return std::string(host);
+    }
+    return "N/A";
+}
+
 }  // namespace netscanner
