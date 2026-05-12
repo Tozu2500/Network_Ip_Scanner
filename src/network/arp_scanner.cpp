@@ -44,6 +44,36 @@ std::vector<Device> read_arp_table() {
     if (GetIpNetTable(arp_table, &table_size, TRUE) != NO_ERROR) {
         return devices;
     }
+
+    for (DWORD i = 0; i < arp_table->dwNumEntries; ++i) {
+        MIB_IPNETROW& row = arp_table->table[i];
+
+        // Here, skip invalid entries and only keep dynamic (learned) and static entries
+        if (row.dwType != MIB_IPNET_TYPE_DYNAMIC && row.dwType != MIB_IPNET_TYPE_STATIC) {
+            continue;
+        }
+
+        Device dev;
+
+        // IP
+        struct in_addr addr;
+        addr.s_addr = static_cast<u_long>(row.dwAddr);
+        char ip_buf[INET_ADDRSTRLEN];
+
+        if (inet_ntop(AF_INET, &addr, ip_buf, sizeof(ip_buf))) {
+            dev.ip_address = ip_buf;
+        }
+
+        // MAC
+        dev.mac_address = format_mac(row.bPhysAddr, row.dwPhysAddrLen);
+
+        dev.last_seen = time(nullptr);
+        dev.first_seen = dev.last_seen;
+
+        devices.push_back(dev);
+    }
+
+    return devices;
 }
 
 }  // namespace netscanner
