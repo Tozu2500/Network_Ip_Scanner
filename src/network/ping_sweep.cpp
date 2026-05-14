@@ -19,4 +19,15 @@
 
 namespace netscanner {
 
+bool ping_host(const std::string& ip, int timeout_ms) {
+    HANDLE icmp_handle = IcmpCreateFile();
+
+    if (icmp_handle == INVALID_HANDLE_VALUE) {
+        return false;
+    }
+
+    struct in_addr dest;
+    
+}
+
 }  // namespace netscanner
