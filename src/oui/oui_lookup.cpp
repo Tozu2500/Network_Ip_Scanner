@@ -257,4 +257,16 @@ void OuiLookup::load_builtin() {
     };
 }
 
+std::string OuiLookup::lookup(const std::string& mac) const {
+    std::string prefix = extract_prefix(mac);
+    if (prefix.empty()) return "Unknown";
+
+    auto it = db_.find(prefix);
+    if (it != db_.end()) {
+        return it->second;
+    }
+
+    return "Unknown";
+}
+
 }  // namespace netscanner
