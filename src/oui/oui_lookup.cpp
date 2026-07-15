@@ -6,16 +6,15 @@
 namespace netscanner {
 
 std::string OuiLookup::extract_prefix(const std::string& mac) {
-    // Replace dashes with colons, uppercase, take first 8 chars
+    // Normalize: replace dashes with colons, uppercase, take first 8 chars (AA:BB:CC)
     std::string normalized = utils::replace_char(mac, '-', ':');
     normalized = utils::to_upper(normalized);
 
-    // Extracting the first 3 octets
+    // Extract first 3 octets
     auto parts = utils::split(normalized, ':');
     if (parts.size() >= 3) {
         return parts[0] + ":" + parts[1] + ":" + parts[2];
     }
-
     return "";
 }
 
@@ -26,7 +25,6 @@ bool OuiLookup::load_from_file(const std::string& filepath) {
     std::string line;
     while (std::getline(file, line)) {
         line = utils::trim(line);
-
         if (line.empty() || line[0] == '#') continue;
 
         auto pos = line.find(',');
@@ -39,11 +37,11 @@ bool OuiLookup::load_from_file(const std::string& filepath) {
             db_[prefix] = vendor;
         }
     }
-
     return !db_.empty();
 }
 
 void OuiLookup::load_builtin() {
+    // Common router / IoT / device manufacturers
     db_ = {
         {"00:1A:2B", "Ayecom Technology"},
         {"00:50:56", "VMware"},
@@ -265,8 +263,7 @@ std::string OuiLookup::lookup(const std::string& mac) const {
     if (it != db_.end()) {
         return it->second;
     }
-
     return "Unknown";
 }
 
-}  // namespace netscanner
+} // namespace netscanner
