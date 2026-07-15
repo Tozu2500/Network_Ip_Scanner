@@ -27,6 +27,12 @@ bool ping_host(const std::string& ip, int timeout_ms) {
     }
 
     struct in_addr dest;
+    if (inet_pton(AF_INET, ip.c_str(), &dest) != 1) {
+        return false;
+    }
+
+    const char send_data[] = "ping";
+    DWORD reply_size = sizeof(ICMP_ECHO_REPLY) + sizeof(send_data) + 8;
     
 }
 
