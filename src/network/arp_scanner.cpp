@@ -23,7 +23,7 @@ std::string format_mac(const unsigned char* mac, size_t len) {
     for (size_t i = 0; i < len; ++i) {
         if (i > 0) ss << ":";
 
-        ss << std::uppercase << std::hex << std::setfill("0") << std::setw(2)
+        ss << std::uppercase << std::hex << std::setfill('0') << std::setw(2)
             << static_cast<int>(mac[i]);
     }
 
@@ -66,6 +66,17 @@ std::vector<Device> read_arp_table() {
 
         // MAC
         dev.mac_address = format_mac(row.bPhysAddr, row.dwPhysAddrLen);
+
+        // Skip multicast (224.0.0.0/4) and broadcast entries — these aren't
+        // real devices and would otherwise flood the intrusion check with
+        // false "unknown device" alerts on every scan.
+        unsigned char first_octet = reinterpret_cast<unsigned char*>(&addr.s_addr)[0];
+        bool is_multicast_ip = first_octet >= 224 && first_octet <= 239;
+        bool is_broadcast_ip = dev.ip_address == "255.255.255.255";
+        bool is_broadcast_mac = dev.mac_address == "FF:FF:FF:FF:FF:FF";
+        if (is_multicast_ip || is_broadcast_ip || is_broadcast_mac) {
+            continue;
+        }
 
         dev.last_seen = time(nullptr);
         dev.first_seen = dev.last_seen;
