@@ -868,7 +868,10 @@ void ConsoleUI::run() {
         show_main_menu();
 
         std::string input;
-        std::getline(std::cin, input);
+        if (!std::getline(std::cin, input)) {
+            // stdin closed (EOF) — exit instead of spinning on empty reads
+            break;
+        }
         input = utils::trim(input);
 
         if (input == "1") {
