@@ -354,7 +354,7 @@ void ConsoleUI::do_quick_scan() {
     std::cout << "  (" << phase_ms << " ms)\n";
     reset_color();
 
-    // ── Phase 4: Classify devices ──
+    // Phase 4: Classify devices
     set_color(COLOR_CYAN);
     std::cout << "\n  [Phase 4/4] Classifying devices...\n";
     reset_color();
@@ -370,7 +370,7 @@ void ConsoleUI::do_quick_scan() {
     std::cout << "             Marked gateway & local device\n";
     reset_color();
 
-    // ── Summary ──
+    // Summary
     auto scan_end = std::chrono::steady_clock::now();
     auto total_ms = std::chrono::duration_cast<std::chrono::milliseconds>(scan_end - scan_start).count();
     double total_sec = total_ms / 1000.0;
@@ -415,7 +415,7 @@ void ConsoleUI::do_full_scan() {
     reset_color();
     std::cout << "  " << std::string(50, '-') << "\n\n";
 
-    // ── Show scan parameters ──
+    // Show scan parameters
     set_color(COLOR_DARK_GRAY);
     std::cout << "  Adapter    : " << adapter.description << "\n";
     std::cout << "  Local IP   : " << adapter.ip_address << "\n";
@@ -471,7 +471,7 @@ void ConsoleUI::do_full_scan() {
         return;
     }
 
-    // ── Phase 2: Vendor lookup ──
+    // Phase 2: Vendor lookup
     set_color(COLOR_CYAN);
     std::cout << "\n  [Phase 2/5] Looking up device vendors...\n";
     reset_color();
@@ -506,7 +506,7 @@ void ConsoleUI::do_full_scan() {
     std::cout << "  (" << phase_ms << " ms)\n";
     reset_color();
 
-    // ── Phase 3: Hostname resolution ──
+    // Phase 3: Hostname resolution
     set_color(COLOR_CYAN);
     std::cout << "\n  [Phase 3/5] Resolving hostnames (this may take a moment)...\n";
     reset_color();
@@ -545,7 +545,7 @@ void ConsoleUI::do_full_scan() {
     std::cout << "  (" << phase_ms << " ms)\n";
     reset_color();
 
-    // ── Phase 4: Classify devices ──
+    // Phase 4: Classify devices
     set_color(COLOR_CYAN);
     std::cout << "\n  [Phase 4/5] Classifying devices...\n";
     reset_color();
@@ -589,7 +589,7 @@ void ConsoleUI::do_full_scan() {
         reset_color();
     }
 
-    // ── Summary ──
+    // Summary
     auto scan_end = std::chrono::steady_clock::now();
     auto total_ms = std::chrono::duration_cast<std::chrono::milliseconds>(scan_end - scan_start).count();
     double total_sec = total_ms / 1000.0;
